@@ -898,7 +898,6 @@ function App() {
                   ? 'bg-purple-600 text-white shadow-lg'
                   : 'text-slate-300 hover:text-white hover:bg-slate-700'
               }`}
-              disabled={!analysisResult}
             >
               <svg className="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
@@ -1296,9 +1295,9 @@ class LinkedList:
             <div className="text-center">
               <button
                 onClick={() => processInput()}
-                disabled={isProcessing || (!textInput && !codeInput && !codeAnalysisInput && !uploadedFile)}
+                disabled={isProcessing}
                 className={`px-8 py-4 text-white font-semibold rounded-lg shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
-                  inputType === 'code_analysis' 
+                  inputType === 'code_analysis'
                     ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700'
                     : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700'
                 }`}
@@ -1342,110 +1341,116 @@ class LinkedList:
         )}
 
         {/* Analysis Tab */}
-        {activeTab === 'analysis' && analysisResult && (
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-gradient-to-r from-purple-900/20 to-pink-900/20 border border-purple-500/30 rounded-lg p-6 mb-8">
-              <div className="flex items-center mb-4">
-                <svg className="w-6 h-6 text-purple-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                </svg>
-                <h3 className="text-xl font-semibold text-white">AI Code Analysis Results</h3>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <div className="bg-slate-800/50 rounded-lg p-4">
-                  <div className="text-sm text-slate-400 mb-1">Time Complexity</div>
-                  <div className="text-lg font-mono text-orange-400">{analysisResult.code_analysis.time_complexity}</div>
+        {activeTab === 'analysis' && (
+          analysisResult ? (
+            <div className="max-w-4xl mx-auto">
+              <div className="bg-gradient-to-r from-purple-900/20 to-pink-900/20 border border-purple-500/30 rounded-lg p-6 mb-8">
+                <div className="flex items-center mb-4">
+                  <svg className="w-6 h-6 text-purple-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                  </svg>
+                  <h3 className="text-xl font-semibold text-white">AI Code Analysis Results</h3>
                 </div>
-                <div className="bg-slate-800/50 rounded-lg p-4">
-                  <div className="text-sm text-slate-400 mb-1">Space Complexity</div>
-                  <div className="text-lg font-mono text-blue-400">{analysisResult.code_analysis.space_complexity}</div>
-                </div>
-                <div className="bg-slate-800/50 rounded-lg p-4">
-                  <div className="text-sm text-slate-400 mb-1">Quality Score</div>
-                  <div className="flex items-center">
-                    <div className="text-lg font-bold text-green-400 mr-2">{analysisResult.code_analysis.quality_score}/10</div>
-                    <div className="flex">
-                      {[...Array(10)].map((_, i) => (
-                        <svg key={i} className={`w-3 h-3 ${i < analysisResult.code_analysis.quality_score ? 'text-green-400' : 'text-slate-600'}`} fill="currentColor" viewBox="0 0 20 20">
-                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                        </svg>
-                      ))}
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                  <div className="bg-slate-800/50 rounded-lg p-4">
+                    <div className="text-sm text-slate-400 mb-1">Time Complexity</div>
+                    <div className="text-lg font-mono text-orange-400">{analysisResult.code_analysis.time_complexity}</div>
+                  </div>
+                  <div className="bg-slate-800/50 rounded-lg p-4">
+                    <div className="text-sm text-slate-400 mb-1">Space Complexity</div>
+                    <div className="text-lg font-mono text-blue-400">{analysisResult.code_analysis.space_complexity}</div>
+                  </div>
+                  <div className="bg-slate-800/50 rounded-lg p-4">
+                    <div className="text-sm text-slate-400 mb-1">Quality Score</div>
+                    <div className="flex items-center">
+                      <div className="text-lg font-bold text-green-400 mr-2">{analysisResult.code_analysis.quality_score}/10</div>
+                      <div className="flex">
+                        {[...Array(10)].map((_, i) => (
+                          <svg key={i} className={`w-3 h-3 ${i < analysisResult.code_analysis.quality_score ? 'text-green-400' : 'text-slate-600'}`} fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                  <div>
+                    <h4 className="text-lg font-semibold text-white mb-3 flex items-center">
+                      <svg className="w-5 h-5 text-yellow-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      </svg>
+                      Optimizations
+                    </h4>
+                    <ul className="space-y-2">
+                      {analysisResult.code_analysis.optimizations?.map((opt, i) => (
+                        <li key={i} className="text-slate-300 text-sm flex items-start">
+                          <span className="text-yellow-400 mr-2">•</span>
+                          {opt}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div>
+                    <h4 className="text-lg font-semibold text-white mb-3 flex items-center">
+                      <svg className="w-5 h-5 text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                      </svg>
+                      Alternative Approaches
+                    </h4>
+                    <ul className="space-y-2">
+                      {analysisResult.code_analysis.alternatives?.map((alt, i) => (
+                        <li key={i} className="text-slate-300 text-sm flex items-start">
+                          <span className="text-blue-400 mr-2">•</span>
+                          {alt}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="p-4 bg-slate-800/30 rounded-lg border border-green-500/20">
                   <h4 className="text-lg font-semibold text-white mb-3 flex items-center">
-                    <svg className="w-5 h-5 text-yellow-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    <svg className="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                     </svg>
-                    Optimizations
+                    Learning Insights
                   </h4>
                   <ul className="space-y-2">
-                    {analysisResult.code_analysis.optimizations?.map((opt, i) => (
-                      <li key={i} className="text-slate-300 text-sm flex items-start">
-                        <span className="text-yellow-400 mr-2">•</span>
-                        {opt}
+                    {analysisResult.code_analysis.learning_insights?.map((insight, i) => (
+                      <li key={i} className="text-green-200 text-sm flex items-start">
+                        <span className="text-green-400 mr-2">💡</span>
+                        {insight}
                       </li>
                     ))}
                   </ul>
                 </div>
-                
-                <div>
-                  <h4 className="text-lg font-semibold text-white mb-3 flex items-center">
-                    <svg className="w-5 h-5 text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                    </svg>
-                    Alternative Approaches
-                  </h4>
-                  <ul className="space-y-2">
-                    {analysisResult.code_analysis.alternatives?.map((alt, i) => (
-                      <li key={i} className="text-slate-300 text-sm flex items-start">
-                        <span className="text-blue-400 mr-2">•</span>
-                        {alt}
-                      </li>
-                    ))}
-                  </ul>
+
+                {/* Original Code Display */}
+                <div className="bg-slate-800 rounded-lg p-6 mt-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-xl font-semibold text-white">Analyzed Code</h3>
+                    <button
+                      onClick={() => copyToClipboard(analysisResult.original_code)}
+                      className="p-2 text-slate-400 hover:text-white hover:bg-slate-700 rounded transition-all"
+                    >
+                      <Copy className="w-5 h-5" />
+                    </button>
+                  </div>
+                  <pre className="bg-slate-900 text-slate-200 p-4 rounded-lg overflow-auto text-sm">
+                    <code>{analysisResult.original_code}</code>
+                  </pre>
                 </div>
               </div>
-
-              <div className="p-4 bg-slate-800/30 rounded-lg border border-green-500/20">
-                <h4 className="text-lg font-semibold text-white mb-3 flex items-center">
-                  <svg className="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                  </svg>
-                  Learning Insights
-                </h4>
-                <ul className="space-y-2">
-                  {analysisResult.code_analysis.learning_insights?.map((insight, i) => (
-                    <li key={i} className="text-green-200 text-sm flex items-start">
-                      <span className="text-green-400 mr-2">💡</span>
-                      {insight}
-                    </li>
-                  ))}
-                </ul>
-              </div>
             </div>
-
-            {/* Original Code Display */}
-            <div className="bg-slate-800 rounded-lg p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-semibold text-white">Analyzed Code</h3>
-                <button
-                  onClick={() => copyToClipboard(analysisResult.original_code)}
-                  className="p-2 text-slate-400 hover:text-white hover:bg-slate-700 rounded transition-all"
-                >
-                  <Copy className="w-5 h-5" />
-                </button>
-              </div>
-              <pre className="bg-slate-900 text-slate-200 p-4 rounded-lg overflow-auto text-sm">
-                <code>{analysisResult.original_code}</code>
-              </pre>
+          ) : (
+            <div className="max-w-4xl mx-auto text-center text-slate-400">
+              No analysis yet – run an analysis to see results
             </div>
-          </div>
+          )
         )}
 
         {/* Results Tab */}
